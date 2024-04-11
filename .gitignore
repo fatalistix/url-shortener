@@ -19,3 +19,13 @@
 
 # Go workspace file
 go.work
+
+# Environment file
+.env
+
+# Jetbrains ide
+.idea
+.fleet
+
+# Bin
+bin
