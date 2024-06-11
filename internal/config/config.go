@@ -1,7 +1,6 @@
 package config
 
 import (
-	"log"
 	"os"
 	"time"
 
@@ -30,20 +29,15 @@ type Service struct {
 
 // Приставка Must по соглашению должна не возвращать ошибку в случае проблем, а паниковать. Так делать по-хорошему надо очень редко. Также некоторые игнорируют семантическое значение приставки Must и просто говорят, что она выдает ошибку. Здесь это оправданно, так как что ещё делать, если не падать, ведь даже конфиг не загрузился
 func MustLoad(configPath string) *Config {
-	if configPath == "" {
-		// Если возникла проблема (то есть переменная окружения просто не была найдена), то просто падаем через `log.Fatal`, так как основной логгер `slog` просто еще не запущен
-		log.Fatal("CONFIG_PATH is not set")
-	}
-
 	// check if file exists
 	if _, err := os.Stat(configPath); os.IsNotExist(err) {
-		log.Fatalf("config file does not exists: %s", configPath)
+		panic("config file does not exists: " + configPath)
 	}
 
 	var cfg Config
 
 	if err := cleanenv.ReadConfig(configPath, &cfg); err != nil {
-		log.Fatalf("cannot read config: %s", err)
+		panic("cannot read config: " + err.Error())
 	}
 
 	return &cfg
